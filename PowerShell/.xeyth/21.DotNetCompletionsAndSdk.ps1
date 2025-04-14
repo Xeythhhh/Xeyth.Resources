@@ -1,35 +1,41 @@
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
 
-#region Guard
-
-function xeyth-confugration::Get-SdkSemVer {
-    param([string]$sdkString)
-    $versionPart = ($sdkString -split '\s+')[0]
-    return $versionPart
-}
-
-function xeyth-confugration::Test-MinimumDotnetSdk {
-    param([string]$minVersion)
-    $sdkLines = & dotnet --list-sdks 2>$null
-    foreach ($line in $sdkLines) {
-        $version = xeyth-confugration::Get-SdkSemVer $line
-        if ($version -ge $minVersion) {
-            return $true
-        }
+& {
+    function Get-SdkSemVer {
+        param([string]$sdkString)
+    
+        # Extract version and parse out the base part
+        $versionPart = ($sdkString -split '\s+')[0] -replace '-preview.*$', ''
+        return [version]$versionPart
     }
-    return $false
+    
+    function Test-MinimumDotnetSdk {
+        param([version]$minVersion)
+    
+        $sdkLines = & dotnet --list-sdks 2>$null
+        foreach ($line in $sdkLines) {
+            try {
+                $version = Get-SdkSemVer $line
+                if ($version -ge $minVersion) {
+                    return $true
+                }
+            } catch {
+                continue
+            }
+        }
+        return $false
+    }
+    
+    #######################################################
+
+    $minDotnetVersion = [version]"10.0.100"
+    $hasRequiredDotnet = Test-MinimumDotnetSdk -minVersion $minDotnetVersion
+
+    if (-not $hasRequiredDotnet) {
+        throw "[⚠️ MISSING] Required .NET SDK '$minDotnetVersion' or higher not found.`nInstall from: https://dotnet.microsoft.com/en-us/download/dotnet"
+    }
 }
-
-$guard_minDotnetVersion = "10.0.100-preview.3"
-$guard_hasRequiredDotnet = xeyth-confugration::Test-MinimumDotnetSdk -minVersion $guard_minDotnetVersion
-
-if (-not $guard_hasRequiredDotnet) {
-    Write-Host "`n[⚠️ MISSING] Required .NET SDK $minDotnetVersion or higher not found." -ForegroundColor Yellow
-    Write-Host "→ Install from: https://dotnet.microsoft.com/en-us/download/dotnet" -ForegroundColor DarkGray
-}
-
-#endregion
 
 # Welcome to .NET 10.0!
 # ---------------------
