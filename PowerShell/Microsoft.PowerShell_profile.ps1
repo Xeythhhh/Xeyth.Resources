@@ -46,7 +46,9 @@ if (Test-Path $xeythModulesPath) {
             # Dot-source the script to bring it into the current session
             . $script.FullName
 
-            Write-Host "[✓] Loaded Xeyth Configuration: $($script.Name)" -ForegroundColor DarkGray
+            # Strip ordering prefix and display information
+            $scriptDisplayName = $script.BaseName -replace '^\d+\.', ''
+            Write-Host "[✓] Loaded Xeyth Configuration: $scriptDisplayName.ps1" -ForegroundColor DarkGray
         } catch {
             Write-Host "[✗] Failed to load Xeyth Configuration script: $($script.Name)" -ForegroundColor Red
             Write-Host "    $_" -ForegroundColor Red
@@ -75,3 +77,10 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
+
+
+
+
+
+
+
