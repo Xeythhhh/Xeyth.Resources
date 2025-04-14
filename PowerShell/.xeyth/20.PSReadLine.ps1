@@ -24,7 +24,7 @@ Set-PSReadLineOption -PredictionSource 'HistoryAndPlugin'
 Set-PSReadLineOption -PredictionViewStyle 'ListView'
 Set-PSReadLineOption -Colors $TokenColors
 
-function xeyth-test::Test-PSReadLine-TokenColors {
+function Test-PSReadLine-TokenColors {
     Write-Host "# Comment" -ForegroundColor $TokenColors["Comment"]
     Write-Host "'String Literal'" -ForegroundColor $TokenColors["String"]
     Write-Host "42" -ForegroundColor $TokenColors["Number"]
