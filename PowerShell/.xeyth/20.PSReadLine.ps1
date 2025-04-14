@@ -1,6 +1,8 @@
-if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
-    Write-Host "`n[⚠️ MISSING] PSReadLine module not found." -ForegroundColor [ConsoleColor]::Yellow
-    Write-Host "→ Install via: Install-Module PSReadLine -Scope CurrentUser -Force" -ForegroundColor [ConsoleColor]::DarkGray
+& {
+    $psReadLineExists = Get-Module -ListAvailable -Name PSReadLine
+    if (-not $psReadLineExists) {
+        throw "[⚠️ MISSING] PSReadLine module not found.`nInstall via: Install-Module PSReadLine -Scope CurrentUser -Force"
+    }
 }
 
 $TokenColors = @{

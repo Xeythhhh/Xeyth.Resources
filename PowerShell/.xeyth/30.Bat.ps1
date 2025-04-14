@@ -1,11 +1,11 @@
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
 
-if (-not (Get-Command bat -ErrorAction SilentlyContinue)) {
-    Write-Host "`n[⚠️ MISSING] Bat not found." -ForegroundColor [ConsoleColor]::Yellow
-} else {
-    Set-Alias cat bat
+& {
+	Test-Require-Command bat "e.g. 'scoop install bat'"
 }
+
+Set-Alias cat bat
 
 Register-ArgumentCompleter -Native -CommandName 'bat' -ScriptBlock {
     param($wordToComplete, $commandAst, $cursorPosition)
