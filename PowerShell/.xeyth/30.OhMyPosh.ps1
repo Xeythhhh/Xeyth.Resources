@@ -4,6 +4,6 @@ $configFile = Join-Path -Path $directory -ChildPath "Configuration\oh-my-posh.js
 try {
 	oh-my-posh init pwsh --config $configFile | Invoke-Expression
 } catch {
-	Write-Host "Failed to initialize oh-my-posh, attempting fallback!"  -ForegroundColor [ConsoleColor]::Yellow -BackgroundColor [ConsoleColor]::DarkRed
+	Write-Host "Failed to initialize oh-my-posh, attempting fallback!"  -ForegroundColor [ConsoleColor]::Yellow
 	& ([ScriptBlock]::Create((oh-my-posh init pwsh --config $configFile --print) -join "`n"))
 }
