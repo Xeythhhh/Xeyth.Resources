@@ -4,21 +4,49 @@
 # and ensures script execution policy allows running them.
 # -----------------------------------------------
 
-#region Ensure Execution Policy is set to RemoteSigned for this user
+# Define Bootstrap functions
+
+function Write-StatusMessage {
+    param(
+        [string]$Message,
+        [string]$Symbol = "✓",
+        [ConsoleColor]$SymbolColor = "Green",
+        [ConsoleColor]$MessageColor = "DarkGray"
+    )
+
+    Write-Host "[" -NoNewline -ForegroundColor DarkGray
+    Write-Host "$Symbol" -NoNewline -ForegroundColor $SymbolColor 
+    Write-Host "] " -NoNewline -ForegroundColor DarkGray
+    Write-Host $Message -ForegroundColor $MessageColor
+}
+
+function Write-StatusError {
+    param(
+        [string]$Message
+    )
+    Write-StatusMessage $Message -Symbol "✗" -SymbolColor DarkRed -MessageColor DarkRed
+}
+
+function Test-Require-Command($cmd, $helpUrl) {
+    if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) {
+        throw "[⚠️ MISSING] Required command '$cmd' not found.`n→ Install: $helpUrl"
+    }
+}
+
+# Ensure Execution Policy is set to RemoteSigned for this user
 try {
     $currentUserPolicy = Get-ExecutionPolicy -Scope CurrentUser
 
     if ($currentUserPolicy -ne "RemoteSigned") {
-        Write-Host "[⚙] Setting ExecutionPolicy to RemoteSigned for CurrentUser..." -ForegroundColor Yellow
+        Write-StatusMessage "Setting ExecutionPolicy to RemoteSigned for CurrentUser..." -Symbol "⚙" -SymbolColor Yellow -MessageColor Yellow
         Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
-        Write-Host "[✓] ExecutionPolicy set. You may need to restart the shell once." -ForegroundColor Green
+        Write-StatusMessage "ExecutionPolicy set. You may need to restart the shell once."
     }
 } catch {
-    Write-Host "[✗] Failed to set ExecutionPolicy: $_" -ForegroundColor Red
+    Write-StatusError "Failed to set ExecutionPolicy: $_"
 }
-#endregion
 
-#region Load and source each *.ps1 script from the .xeyth folder ("C:\Users\Xeyth\Documents\PowerShell\.xeyth")
+# Load and source each *.ps1 script from the .xeyth folder ("C:\Users\Xeyth\Documents\PowerShell\.xeyth")
 
 # File prefix meaning (eg. {prefix}.PsReadLine.ps1)
 # 0* - Global Constants / Shared Values
@@ -30,13 +58,20 @@ $profileDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path # Get the di
 $xeythModulesPath = Join-Path -Path $profileDirectory -ChildPath ".xeyth" # Define the path to the .xeyth module folder
 
 if (Test-Path $xeythModulesPath) {
+    Write-Host "Loading profile..." -ForegroundColor DarkGray
 
     # Get all .ps1 files recursively, sorted for predictable load order
     $xeythScripts = Get-ChildItem -Path $xeythModulesPath -Recurse -Filter "*.ps1" | Sort-Object FullName
 
     foreach ($script in $xeythScripts) {
+
+        # Strip ordering prefix and display information
+        $scriptDisplayName = $script.BaseName -replace '^\d+\.', ''
+
+        if ($global:XeythLoadedScripts -contains $script.FullName) { continue }
+
         try {
-			
+            
             # If the script is marked as downloaded from the internet, unblock it. (These files live in a repository for easy setup across machines)
             $zoneIdentifier = "$($script.FullName):Zone.Identifier"
             if (Test-Path $zoneIdentifier) {
@@ -44,20 +79,25 @@ if (Test-Path $xeythModulesPath) {
             }
 
             # Dot-source the script to bring it into the current session
-            . $script.FullName
+            $output = . $script.FullName
 
-            # Strip ordering prefix and display information
-            $scriptDisplayName = $script.BaseName -replace '^\d+\.', ''
-            Write-Host "[✓] Loaded Xeyth Configuration: $scriptDisplayName.ps1" -ForegroundColor DarkGray
+            Write-StatusMessage "Loaded: $scriptDisplayName"
+            if ($output) {
+                $output | ForEach-Object { Write-Host "    > $_" -ForegroundColor DarkGray }
+            }
+
+            $global:XeythLoadedScripts += $script.FullName
+
         } catch {
-            Write-Host "[✗] Failed to load Xeyth Configuration script: $($script.Name)" -ForegroundColor Red
-            Write-Host "    $_" -ForegroundColor Red
+            Write-StatusError "Failed to load: $scriptDisplayName"
+            ($_ -split "`n") | ForEach-Object {
+                Write-Host "    > " -ForegroundColor DarkGray -NoNewline
+                Write-Host "$_" -ForegroundColor Red
+            }
         }
     }
 
 }
-
-#endregion
 
 
 
