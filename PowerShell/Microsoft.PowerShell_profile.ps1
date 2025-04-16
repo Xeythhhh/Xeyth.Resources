@@ -60,8 +60,8 @@ $xeythModulesPath = Join-Path -Path $profileDirectory -ChildPath ".xeyth" # Defi
 if (Test-Path $xeythModulesPath) {
     Write-Host "Loading profile..." -ForegroundColor DarkGray
 
-    # Get all .ps1 files recursively, sorted for predictable load order
-    $xeythScripts = Get-ChildItem -Path $xeythModulesPath -Recurse -Filter "*.ps1" | Sort-Object FullName
+    # Get all .ps1 files in "./.xeyth/" sorted for predictable load order
+    $xeythScripts = Get-ChildItem -Path $xeythModulesPath -Filter "*.ps1" | Sort-Object FullName
 
     foreach ($script in $xeythScripts) {
 
@@ -83,14 +83,14 @@ if (Test-Path $xeythModulesPath) {
 
             Write-StatusMessage "Loaded: $scriptDisplayName"
             if ($output) {
-                $output | ForEach-Object { Write-Host "    > $_" -ForegroundColor DarkGray }
+                $output.split("`n", [System.StringSplitOptions]::RemoveEmptyEntries) | ForEach-Object { Write-Host "    > $_" -ForegroundColor DarkGray }
             }
 
             $global:XeythLoadedScripts += $script.FullName
 
         } catch {
             Write-StatusError "Failed to load: $scriptDisplayName"
-            ($_ -split "`n") | ForEach-Object {
+            $_.ToString().split("`n", [System.StringSplitOptions]::RemoveEmptyEntries) | ForEach-Object {
                 Write-Host "    > " -ForegroundColor DarkGray -NoNewline
                 Write-Host "$_" -ForegroundColor Red
             }
