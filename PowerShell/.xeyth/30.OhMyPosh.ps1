@@ -3,7 +3,7 @@
 }
 
 $directory = Split-Path -Parent $MyInvocation.MyCommand.Path
-$configFile = Join-Path -Path $directory -ChildPath "Configuration\oh-my-posh.json"
+$configFile = Join-Path -Path $directory -ChildPath ".oh-my-posh\theme.json"
 
 try {
 	oh-my-posh init pwsh --config $configFile | Invoke-Expression
