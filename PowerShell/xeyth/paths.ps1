@@ -7,7 +7,7 @@
 $script:XeythRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Module-related paths
-$script:ModulesPath = Join-Path -Path $XeythRoot -ChildPath "modules"
+$script:ModulesPath = Join-Path -Path $XeythRoot -ChildPath "XPS"
 $script:BootstrapScriptsPath = Join-Path -Path $XeythRoot -ChildPath "bootstrap"
 $script:TestsPath = Join-Path -Path $BootstrapScriptsPath -ChildPath "tests"
 
