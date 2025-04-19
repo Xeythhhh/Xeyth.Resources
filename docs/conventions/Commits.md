@@ -52,11 +52,15 @@ All machine-readable metadata must be placed in the **footer**, on the final lin
 - Uses a `key:value` format
 - Is separated by spaces (single-line preferred)
 
-| Metadata Key | Purpose                                                                                                                                                                                                             | Example         |
-|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `@semver`    | Overrides [GitVersion](https://gitversion.net) version bumping                                                                                                                                                      | `@semver:minor` |
-| `@issue`     | Links to an issue (e.g. [GitHub](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues), [Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/boards/work-items/about-work-items)) | `@issue:342`    |
-| `@nuke`      | Triggers [Nuke](https://nuke.build/) build targets in CI/CD pipelines                                                                                                                                               | `@nuke:feature` |
+[gitVersion]: https://gitversion.net
+[gitIssues]: https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues
+[azureDevOpsIssues]: https://learn.microsoft.com/en-us/azure/devops/boards/work-items/about-work-items
+
+| Metadata Key | Purpose                                                                         | Example         |
+|--------------|---------------------------------------------------------------------------------|-----------------|
+| `@semver`    | Overrides [GitVersion][gitVersion] version bumping                              | `@semver:minor` |
+| `@issue`     | Links to an issue (e.g. [GitHub][gitIssues], [Azure DevOps][azureDevOpsIssues]) | `@issue:#342`   |
+| `@nuke`      | Triggers [Nuke](https://nuke.build/) build targets in CI/CD pipelines           | `@nuke:feature` |
 
 This list is extensible — future metadata tags may be added as tooling evolves.
 
@@ -99,7 +103,7 @@ feat(auth): implement OAuth2 provider support
 - Refactored login and token validation logic
 
 BREAKING CHANGE: Existing SSO flows must be updated
-@semver:minor @issue:340 @nuke:feature
+@semver:minor @issue:#340 @nuke:feature
 ```
 
 ---
