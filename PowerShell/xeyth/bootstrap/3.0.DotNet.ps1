@@ -1,41 +1,31 @@
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
 
-& {
-    function Get-SdkSemVer {
-        param([string]$sdkString)
-    
-        # Extract version and parse out the base part
-        $versionPart = ($sdkString -split '\s+')[0] -replace '-preview.*$', ''
-        return [version]$versionPart
-    }
-    
-    function Test-MinimumDotnetSdk {
-        param([version]$minVersion)
-    
-        $sdkLines = & dotnet --list-sdks 2>$null
-        foreach ($line in $sdkLines) {
-            try {
-                $version = Get-SdkSemVer $line
-                if ($version -ge $minVersion) {
-                    return $true
-                }
-            } catch {
-                continue
-            }
-        }
-        return $false
-    }
-    
-    #######################################################
-
-    $minDotnetVersion = [version]"10.0.100"
-    $hasRequiredDotnet = Test-MinimumDotnetSdk -minVersion $minDotnetVersion
-
-    if (-not $hasRequiredDotnet) {
-        throw "[⚠️ MISSING] Required .NET SDK '$minDotnetVersion' or higher not found.`nInstall from: https://dotnet.microsoft.com/en-us/download/dotnet"
-    }
+# Private helper function - extracts version from SDK string
+$script:GetSdkSemVer = {
+    param([string]$sdkString)
+    return [version]($sdkString -split '\s+' -replace '-preview.*$' | Select-Object -First 1)
 }
+
+# Private helper function - checks if minimum SDK version is installed
+$script:TestMinimumDotnetSdk = {
+    param([version]$minVersion)
+    # Cache the SDK list to avoid multiple calls
+    $sdkLines = & dotnet --list-sdks 2>$null
+    if (-not $sdkLines) { return $false }
+    
+    foreach ($sdk in $sdkLines) {
+        if ((& $script:GetSdkSemVer $sdk) -ge $minVersion) { return $true }
+    }
+
+    return $false
+}
+
+$script:minDotnetVersion = [version]"10.0.100"
+$script:hasRequiredDotnet = & $script:TestMinimumDotnetSdk -minVersion $minDotnetVersion
+
+# public requirement checks
+XPSRequire -condition $script:hasRequiredDotnet -message "Required .NET SDK '$script:minDotnetVersion' or higher not found." -helpUrl "https://dotnet.microsoft.com/en-us/download/dotnet"
 
 # Welcome to .NET 10.0!
 # ---------------------
