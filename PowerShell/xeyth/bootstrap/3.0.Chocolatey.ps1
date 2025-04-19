@@ -4,7 +4,7 @@
 # for `choco` will not function.
 # See https://ch0.co/tab-completion for details.
 $script:ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($script:ChocolateyProfile)) {
-    Import-Module "$script:ChocolateyProfile"
+if (Test-Path($ChocolateyProfile)) {
+    Import-Module "$ChocolateyProfile"
 }
 

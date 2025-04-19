@@ -22,10 +22,10 @@ $script:TestMinimumDotnetSdk = {
 }
 
 $script:minDotnetVersion = [version]"10.0.100"
-$script:hasRequiredDotnet = & $script:TestMinimumDotnetSdk -minVersion $minDotnetVersion
+$script:hasRequiredDotnet = & $TestMinimumDotnetSdk -minVersion $minDotnetVersion
 
 # public requirement checks
-XPSRequire -condition $script:hasRequiredDotnet -message "Required .NET SDK '$script:minDotnetVersion' or higher not found." -helpUrl "https://dotnet.microsoft.com/en-us/download/dotnet"
+XPSRequire -condition $hasRequiredDotnet -message "Required .NET SDK '$minDotnetVersion' or higher not found." -helpUrl "https://dotnet.microsoft.com/en-us/download/dotnet"
 
 # Welcome to .NET 10.0!
 # ---------------------

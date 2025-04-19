@@ -49,4 +49,4 @@ XPSRequireCommand git "https://git-scm.com/downloads"
 XPSRequireCommand nano "`nchoco install -y nano`nwinget install GNU.Nano"
 
 # Public configuration
-return XPSConfigure @({ & $script:SetGitEditor }, { & $script:SetGitEditorEnvironmentVariable })
+return XPSConfigure @({ & $SetGitEditor }, { & $SetGitEditorEnvironmentVariable })

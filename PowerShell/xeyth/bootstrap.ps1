@@ -11,5 +11,5 @@
 # -----------------------------------------------
 
 # Load and source each *.ps1 bootstrap script
-XPSLoadScripts -directoryPath $global:Xeyth.Paths.Bootstrap -description "profile scripts"
-if ($XeythConfig.RunTests) { XPSLoadScripts -directoryPath $global:Xeyth.Paths.Tests -description "test scripts" } 
+XPSLoadScripts -directoryPath $Xeyth.XPS.Paths.Bootstrap -description "profile scripts"
+if ($Xeyth.XPS.Config.RunTests) { XPSLoadScripts -directoryPath $Xeyth.XPS.Paths.Tests -description "test scripts" } 
