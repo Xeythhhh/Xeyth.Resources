@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# Xeyth PowerShell Bootstrap
+# Xeyth PowerShell Profile
 # -----------------------------------------------
 
 # Initialize the global Xeyth object
@@ -12,5 +12,5 @@ $global:Xeyth = @{ XPS = @{ } }
 # Load core modules
 . (Join-Path -Path $Xeyth.XPS.Paths.Root -ChildPath "types.ps1")
 . (Join-Path -Path $Xeyth.XPS.Paths.Root -ChildPath "security.ps1")
+. (Join-Path -Path $Xeyth.XPS.Paths.Root -ChildPath "xps.ps1")
 . (Join-Path -Path $Xeyth.XPS.Paths.Root -ChildPath "modules.ps1")
-. (Join-Path -Path $Xeyth.XPS.Paths.Root -ChildPath "bootstrap.ps1")

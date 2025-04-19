@@ -7,14 +7,14 @@
 $script:XeythRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Module-related paths
-$script:ModulesPath = Join-Path -Path $XeythRoot -ChildPath "XPS"
-$script:BootstrapScriptsPath = Join-Path -Path $XeythRoot -ChildPath "bootstrap"
-$script:TestsPath = Join-Path -Path $BootstrapScriptsPath -ChildPath "tests"
+$script:XPSPath = Join-Path -Path $XeythRoot -ChildPath "XPS"
+$script:ModulesPath = Join-Path -Path $XeythRoot -ChildPath "modules"
+$script:TestsPath = Join-Path -Path $ModulesPath -ChildPath "tests"
 
 # Initialize the Paths property in the global Xeyth object
 $Xeyth.XPS.Paths = @{
     Root = $XeythRoot
+    XPS = $XPSPath
     Modules = $ModulesPath
-    Bootstrap = $BootstrapScriptsPath
     Tests = $TestsPath
 } 

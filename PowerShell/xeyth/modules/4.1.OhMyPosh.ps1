@@ -1,7 +1,7 @@
 # Public requirement check
 XPSRequireCommand "oh-my-posh" "e.g. 'scoop install oh-my-posh'`nYou can use scoop or choco for Windows`nhttps://ohmyposh.dev/docs"
 
-$script:configFile = Join-Path -Path $Xeyth.XPS.Paths.Bootstrap -ChildPath ".oh-my-posh\theme.json"
+$script:configFile = Join-Path -Path $Xeyth.XPS.Paths.Modules -ChildPath ".oh-my-posh\theme.json"
 
 try {
 	# First attempt: Try to initialize and invoke directly
