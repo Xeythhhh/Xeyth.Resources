@@ -40,6 +40,7 @@ Notes:
 | `test`     | Adding or updating tests                                    |
 | `perf`     | Performance improvements                                    |
 | `revert`   | Reverts a previous commit                                   |
+| `learn`    | Files related to research (e.g. docs, instructions, etc)    |
 
 ---
 
