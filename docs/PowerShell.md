@@ -38,7 +38,7 @@ The XPS Bootstrap framework is a modular and extensible system designed to strea
 ### Oh My Posh Integration
 
 - Integrates Oh My Posh for a visually appealing and informative prompt.
-- Includes a custom theme available in the [Xeyth.Resources repository](https://github.com/Xeythhhh/Xeyth.Resources).
+- Includes a custom theme [file](https://github.com/Xeythhhh/Xeyth.Resources/blob/main/PowerShell/xeyth/bootstrap/.oh-my-posh/theme.json).
 
 ### Scoped Function Convention
 
